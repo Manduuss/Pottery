@@ -1,12 +1,52 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
+const mongoose = require('mongoose')
+const productRoute = require('./routes/productRoute')
+const categoryRoute = require('./routes/categoryRoute')
+const customerRoute = require('./routes/customerRoute')
+const errorMiddleware = require('./middleware/errorMiddleware')
+
+
+//const Customer = require('./models/customerModel')
+
+const PORT = process.env.PORT || 3000
+const MONGO_URL = process.env.MONGO_URL
+//we set port and route in env - file. if it doesn't use port it will use 3000
+
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
+
+//routes
+
+app.use('/api', productRoute);
+app.use('/api', categoryRoute);
+app.use('/api', customerRoute);
+
+
 
 //declare a route to access e.g. website
 
-app.get('/', (req, res)=> {
-    res.send('Hello NODE API')
+app.get('/', (req, res) => {
+    res.send('Hello NODE API, My name is MANDUS')
 })
 
-app.listen(3000, ()=> {
-    console.log('node API app is running on port 3000')
+
+app.use(errorMiddleware);
+
+
+mongoose.set("strictQuery", false)
+mongoose.connect(MONGO_URL)
+.then(() => {
+    console.log('connected to MongoDB')
+    app.listen(PORT, ()=> {
+        console.log('node API app is running on port ${PORT}')
+    });
+    
+}).catch((error) => {
+    console.log(error)
 })
+
+
+
+
