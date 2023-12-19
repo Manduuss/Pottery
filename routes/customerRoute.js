@@ -1,7 +1,7 @@
 const express = require('express');
 const Customer = require('../models/customerModel');
 const router = express.Router();
-const {getCustomers, getCustomer, createCustomer, updateCustomer, deleteCustomer} = require('../controllers/customersController')
+const {getCustomers, getCustomer, createCustomer, updateCustomer, deleteCustomer, loginCustomer} = require('../controllers/customersController')
 
 //fetch all customers
 router.get('/customer', getCustomers)
@@ -17,5 +17,8 @@ router.put('/customer/:id', updateCustomer)
 
 //delete a customer
 router.delete('/customer/:id', deleteCustomer)
+
+//loginCustomer
+router.post('/customer/login', loginCustomer);
 
  module.exports = router;

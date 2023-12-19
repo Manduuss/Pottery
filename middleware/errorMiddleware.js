@@ -5,6 +5,9 @@
     //we will get stack error: null
 
 const errorMiddleware = (err, req, res, next) => {
+    console.error('Error:', err.message);
+    console.error(err.stack);
+
     console.log('here is an error middleware');
     const statusCode = res.statusCode ? res.statusCode : 500;
     res.status(statusCode);

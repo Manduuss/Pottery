@@ -46,7 +46,7 @@ const updateProduct = asyncHandler(async(req, res) => {
         //we cannot find a product to update
         if(!product) {
             res.status(404);
-            throw new Error('cannot find any product with ID ${id}');
+            throw new Error(`cannot find any product with ID ${id}`);
         }
         const updateProduct = await Product.findById(id);
         res.status(200).json(updateProduct);
@@ -65,7 +65,7 @@ const deleteProduct =  asyncHandler(async(req, res) => {
      const product = await Product.findByIdAndDelete(id);
      if(!product){
         res.status(404);
-        throw new Error('cannot find any product with ID ${id}');
+        throw new Error(`cannot find any product with ID ${id}`);
      }
      res.status(200).json(product);
  

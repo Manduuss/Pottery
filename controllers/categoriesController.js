@@ -29,7 +29,7 @@ const getCategory = asyncHandler(async(req, res) => {
 
 // safe a new category
 
-const createCaterogy = (async(req, res) => {
+const createCaterogy = asyncHandler(async(req, res) => {
     try {
         const category = await Category.create(req.body)
         res.status(200).json(category);
@@ -40,7 +40,7 @@ const createCaterogy = (async(req, res) => {
     }
 })
 
-//update a catogory
+//update a category
 const updateCategory = asyncHandler(async(req, res) => {
     try {
         const {id} = req.params;
@@ -48,7 +48,7 @@ const updateCategory = asyncHandler(async(req, res) => {
         //we cannot find a category to update
         if(!category) {
         res.status(404);
-        throw new Error('cannot find any category with ID ${id}');
+        throw new Error(`cannot find any category with ID ${id}`);
         }
         const updateCategory = await Category.findById(id);
         res.status(200).json(updateCategory);
@@ -67,7 +67,7 @@ const deleteCategory = asyncHandler(async(req, res) => {
      const category = await Category.findByIdAndDelete(id);
      if(!category){
         res.status(404);
-        throw new Error('cannot find any category with ID ${id}'); 
+        throw new Error(`cannot find any category with ID ${id}`); 
         }
      res.status(200).json(category);
  
