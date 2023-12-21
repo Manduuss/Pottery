@@ -1,5 +1,11 @@
 const Customer = require('../models/customerModel');
 const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+//with this we could protect routes that need authentification (e.g. getCustomer)
+const authMiddleware = require('../middleware/authMiddleware');
+
 
 const loginCustomer = asyncHandler(async (req, res) => {
     const { lastname, email } = req.body;
@@ -11,8 +17,10 @@ const loginCustomer = asyncHandler(async (req, res) => {
         return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // If the customer is found, send a success message
-    res.status(200).json({ message: 'Login successful', customer: existingCustomer });
+    // If the customer is found, create a JWT token and send a success message with the token
+    const token = jwt.sign({ userId: existingCustomer._id }, 'JWS-token-key', { expiresIn: '2h' });
+
+    res.status(200).json({ message: 'Login successful', token, customer: existingCustomer });
 });
 
 //get all customer
@@ -21,7 +29,7 @@ const getCustomers = asyncHandler(async(req, res) => {
        const customer = await Customer.find({});
        res.status(200).json(customer)
     } catch (error) {
-        res.status(500);
+        res.status(400);
         throw new Error(error.message);
     }
 })
@@ -33,7 +41,7 @@ const getCustomer = asyncHandler(async(req, res) => {
         const customer = await Customer.findById(id);
         res.status(200).json(customer)
     } catch (error) {
-        res.status(500);
+        res.status(404);
         throw new Error(error.message);   
      }
 })
@@ -82,7 +90,7 @@ const updateCustomer = asyncHandler(async(req, res) => {
       res.status(200).json(customer);
  
      } catch (error) {
-         res.status(500);
+         res.status(404);
          throw new Error(error.message);    
      } 
   })
